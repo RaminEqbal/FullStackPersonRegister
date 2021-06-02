@@ -1,11 +1,9 @@
 package com.ramineqbal.personbackend.api;
 
-
 import java.util.List;
 
-import com.ramineqbal.personbackend.exception.UserNotFoundException;
-import com.ramineqbal.personbackend.model.Person;
-import com.ramineqbal.personbackend.service.PersonService;
+import com.ramineqbal.personbackend.model.Address;
+import com.ramineqbal.personbackend.service.AddressService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,43 +17,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api/person")
+@RequestMapping("/api/address")
 @RestController
-public class PersonController {
+public class AddressController {
     
 
     @Autowired
-    private final PersonService database;
+    private final AddressService database;
 
 
-    public PersonController(PersonService database) {
+    public AddressController(AddressService database) {
         this.database = database;
     }
 
 
 
     @GetMapping
-    public ResponseEntity<List<Person>> getPersonList() {
+    public ResponseEntity<List<Address>> getAddressList() {
         return new ResponseEntity<>(database.findAll(),HttpStatus.OK);
 
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Person> addPerson(@RequestBody Person person){
-        return new ResponseEntity<>(database.addPerson(person),HttpStatus.CREATED);
+    public ResponseEntity<Address> addAddress(@RequestBody Address Address){
+        return new ResponseEntity<>(database.addAddress(Address),HttpStatus.CREATED);
     }
 
 
 
     @PutMapping("/update")
-    public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
-        return new ResponseEntity<>(database.updatePerson(person),HttpStatus.OK);
+    public ResponseEntity<Address> updateAddress(@RequestBody Address Address) {
+        return new ResponseEntity<>(database.updateAddress(Address),HttpStatus.OK);
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<Person> findPersonById(@PathVariable("id") Long id) {
+    public ResponseEntity<Address> findAddressById(@PathVariable("id") Long id) {
 
-        Person toBeFound = database.findPersonById(id);
+        Address toBeFound = database.findAddressById(id);
         return new ResponseEntity<>(toBeFound,HttpStatus.OK);
 
 
@@ -65,11 +63,12 @@ public class PersonController {
 
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deletePerson(@PathVariable("id") Long id) {
-        database.deletePerson(id);
+    public ResponseEntity<?> deleteAddress(@PathVariable("id") Long id) {
+        database.deleteAddress(id);
         return new ResponseEntity<>(HttpStatus.OK);
         
     }
+
 
 
 }

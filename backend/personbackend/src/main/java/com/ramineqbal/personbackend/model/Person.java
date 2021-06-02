@@ -1,24 +1,29 @@
 package com.ramineqbal.personbackend.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
-@Table
-public class Person {
+
+@Entity(name = "Person")
+public class Person implements Serializable {
     
     @Id
-    private final UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false, updatable = false)
+    private final Long id;
 
     private String surname;
     private String name;
@@ -26,7 +31,7 @@ public class Person {
     private Date dateOfBirth;
 
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
     name = "person_address_join", 
     joinColumns = @JoinColumn(name = "person_id"), 
@@ -36,8 +41,10 @@ public class Person {
 
 
 
+    
+   
 
-    public Person(@JsonProperty("id") UUID id,@JsonProperty("surname") String surname,@JsonProperty("name") String name,@JsonProperty("dob") Date dateOfBirth,@JsonProperty("address") List<Address> address) {
+    public Person(@JsonProperty("id") Long id,@JsonProperty("surname") String surname,@JsonProperty("name") String name,@JsonProperty("dob") Date dateOfBirth,@JsonProperty("address") List<Address> address) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -45,7 +52,12 @@ public class Person {
         this.addressList = address;
     }
 
-    public UUID getId() {
+
+    public Person(){
+        this.id=-1l;
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -82,7 +94,11 @@ public class Person {
     }
 
 
-    
+    @Override
+    public String toString() {
+        return "Person [addressList=" + addressList + ", dateOfBirth=" + dateOfBirth + ", id=" + id + ", name=" + name
+                + ", surname=" + surname + "]";
+    }
 
 
 }
