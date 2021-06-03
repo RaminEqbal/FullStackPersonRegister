@@ -2,7 +2,7 @@ package com.ramineqbal.personbackend.service;
 
 import java.util.List;
 
-import com.ramineqbal.personbackend.exception.UserNotFoundException;
+import com.ramineqbal.personbackend.exception.PersonNotFoundException;
 import com.ramineqbal.personbackend.model.Address;
 import com.ramineqbal.personbackend.model.Person;
 import com.ramineqbal.personbackend.repository.AddressRepository;
@@ -41,7 +41,6 @@ public class PersonService {
             System.out.println(addressList.get(i).toString());
             Example<Address> addressLookup = Example.of(addressList.get(i));
             if(addressRepository.exists(addressLookup)) {
-                System.out.println("Lookup Matched");
                 Address replace = addressRepository.findOne(addressLookup).orElseThrow(() -> new RuntimeException("Test"));
                 addressList.set(i, replace);
             }
@@ -65,7 +64,7 @@ public class PersonService {
     @Transactional(readOnly = true)
     public Person findPersonById(Long id) {
         return personRepository.findPersonById(id)
-        .orElseThrow(() -> new UserNotFoundException("Person by id " + id + " not found!"));
+        .orElseThrow(() -> new PersonNotFoundException("Person by id " + id + " not found!"));
     }
 
 

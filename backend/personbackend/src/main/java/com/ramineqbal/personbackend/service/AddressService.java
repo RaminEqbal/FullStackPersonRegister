@@ -2,7 +2,7 @@ package com.ramineqbal.personbackend.service;
 
 import java.util.List;
 
-import com.ramineqbal.personbackend.exception.UserNotFoundException;
+import com.ramineqbal.personbackend.exception.PersonNotFoundException;
 import com.ramineqbal.personbackend.model.Address;
 import com.ramineqbal.personbackend.repository.AddressRepository;
 
@@ -40,7 +40,7 @@ public class AddressService {
 
     public Address findAddressById(Long id) {
         return addressRepository.findAddressById(id)
-        .orElseThrow(() -> new UserNotFoundException("address by id " + id + " not found!"));
+        .orElseThrow(() -> new PersonNotFoundException("address by id " + id + " not found!"));
     }
 
 
