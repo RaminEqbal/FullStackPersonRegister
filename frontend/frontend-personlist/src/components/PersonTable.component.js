@@ -1,18 +1,23 @@
 import React from 'react';
 
 import "../css/tabledata.css"
+import AddPersonForm from './AddPersonForm.components';
 
 
 
 const api = "http://localhost:8080/api/person";
 
 const subscribableKeys = [
-    "id",
+    // "id",
     "surname",
     "name",
+    "emailAddress",
     "dob",
     "address",
 ]
+
+
+
 
 const addressKeys = [
     // "id",
@@ -79,7 +84,7 @@ class PersonTable extends React.Component {
         var result = "";
         for(var i=0; i<Object.keys(object).length;i++){
             console.log(object[i]);
-            result+= "Addresse "+(i+1)+": ";
+            // result+= "Addresse "+(i+1)+": ";
             for(var j=0;j<addressKeys.length;j++) {
 
                 result += object[i][addressKeys[j]];
@@ -87,7 +92,10 @@ class PersonTable extends React.Component {
             }
             result+=";"
         }
-        return result.split(";").map(item => <div>{item}</div>);
+        return result.split(";").map(item => 
+        <div>
+            {item}
+        </div>);
     }
 
 
@@ -135,6 +143,7 @@ class PersonTable extends React.Component {
             <h1>JSON Response</h1>
 
             <br />
+            <AddPersonForm api={api} keys={this.getPersonKeys()}/>
             <table className="personTable centered">
             <tr>
             {this.displayPersonKeys()}

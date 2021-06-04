@@ -28,6 +28,10 @@ public class Person implements Serializable {
     private String surname;
     private String name;
 
+
+    private String emailAddress;
+
+
     private Date dateOfBirth;
 
 
@@ -41,13 +45,14 @@ public class Person implements Serializable {
 
 
 
-    
-   
 
-    public Person(@JsonProperty("id") Long id,@JsonProperty("surname") String surname,@JsonProperty("name") String name,@JsonProperty("dob") Date dateOfBirth,@JsonProperty("address") List<Address> address) {
+
+
+    public Person(@JsonProperty("id") Long id,@JsonProperty("surname") String surname,@JsonProperty("name") String name,@JsonProperty("email") String email,@JsonProperty("dob") Date dateOfBirth,@JsonProperty("address") List<Address> address) {
         this.id = id;
         this.surname = surname;
         this.name = name;
+        this.emailAddress = email;
         this.dateOfBirth = dateOfBirth;
         this.addressList = address;
     }
@@ -91,6 +96,20 @@ public class Person implements Serializable {
 
     public void setAddress(List<Address> address) {
         this.addressList = address;
+    }
+
+
+
+
+    
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
 
