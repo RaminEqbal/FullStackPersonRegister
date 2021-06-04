@@ -1,6 +1,11 @@
 import React from 'react';
 
+import "../css/tabledata.css"
+
+
+
 const api = "http://localhost:8080/api/person";
+
 const subscribableKeys = [
     "id",
     "surname",
@@ -130,7 +135,7 @@ class PersonTable extends React.Component {
             <h1>JSON Response</h1>
 
             <br />
-            <table>
+            <table className="personTable centered">
             <tr>
             {this.displayPersonKeys()}
             </tr>
