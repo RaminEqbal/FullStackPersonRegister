@@ -108,7 +108,8 @@ class AddPersonForm extends React.Component {
 
         }
         catch(error){
-            alert("Faulty Form")
+            alert("Faulty Form");
+            return;
         }
         
 
@@ -124,13 +125,17 @@ class AddPersonForm extends React.Component {
                 },
                 body: jsonData
             }).then(res => console.log(res))
+
+
+            alert("Person has been added");
         } catch(error) {
             alert("There was a problem adding the data with the API\n"+ error);
+            return;
         }
         
 
         
-        alert("Person has been added");
+        
 
         console.log(this.props.reloadParent);
         this.props.reloadParent();
