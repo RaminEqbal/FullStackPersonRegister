@@ -41,6 +41,7 @@ public class PersonController {
 
     }
 
+    @CrossOrigin
     @PostMapping("/add")
     public ResponseEntity<Person> addPerson(@RequestBody Person person){
         return new ResponseEntity<>(database.addPerson(person),HttpStatus.CREATED);

@@ -3,7 +3,7 @@ import React from 'react';
 
 
 
-
+import {parseSimpleDateToSQLDate} from '../parser/DateParser'
 
 
 
@@ -21,7 +21,7 @@ class AddPersonForm extends React.Component {
 
 
     renderForm() {
-        console.log(this.props.keys)
+
 
         var result = this.props.keys.map(item => {
             return (
@@ -55,21 +55,87 @@ class AddPersonForm extends React.Component {
       }
     
       async handleSubmit(event) {
-        const response = await fetch(this.props.api+"/add", {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: {
-                
-            }
-        })
-
-
-
-        alert('Person was submitted');
         event.preventDefault();
+        console.log("Submit Triggered")
+        var dataBody = {};
+
+
+
+        try {
+
+        for(var i=0;i<this.props.keys.length;i++)
+        {
+            
+            
+            //Address Case
+            if(this.props.keys[i] === "address"){
+                var addressValues = []
+                const entries = this.state["address"].split(";");
+                
+                //Loop through entries
+                for(var j=0;j<entries.length;j++){
+                    
+                    //Loop through values of entry
+                    const values = entries[j].split(",");
+                    let addressObject = {}
+                    
+                    for(var k=0;k<values.length;k++){
+                        
+                        addressObject[this.props.addresskeys[k]] = values[k];
+                    }
+                    
+                    console.log(addressObject);
+                    addressValues.push(addressObject);
+                }
+                
+                dataBody[this.props.keys[i]] = addressValues;
+
+            }
+            else if(this.props.keys[i] === "dob"){
+                dataBody[this.props.keys[i]] = parseSimpleDateToSQLDate( this.state[this.props.keys[i]]);
+            }
+            else {
+                dataBody[this.props.keys[i]] = this.state[this.props.keys[i]];
+            }
+
+
+
+
+        }
+
+        console.log(dataBody);
+
+
+        }
+        catch(error){
+            alert("Faulty Form")
+        }
+        
+
+        const jsonData = JSON.stringify(dataBody);
+
+
+        try {
+            const response = await fetch(this.props.api+"/add", {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonData
+            }).then(res => console.log(res))
+        } catch(error) {
+            alert("There was a problem adding the data with the API\n"+ error);
+        }
+        
+
+        
+        alert("Person has been added");
+
+        console.log(this.props.reloadParent);
+        this.props.reloadParent();
+
+
       }
 
 

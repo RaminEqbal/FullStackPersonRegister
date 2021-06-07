@@ -4,6 +4,10 @@ import "../css/tabledata.css"
 import AddPersonForm from './AddPersonForm.components';
 
 
+import {parseSQLDateToSimpleDate} from '../parser/DateParser'
+
+
+
 
 const api = "http://localhost:8080/api/person";
 
@@ -36,6 +40,7 @@ class PersonTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {personData:null};
+        this.reloadComponent = this.reloadComponent.bind(this);
       }
 
     fetchPersonData() {
@@ -52,7 +57,10 @@ class PersonTable extends React.Component {
 
 
     
-
+    async reloadComponent() {
+        await this.fetchPersonData();
+        await this.forceUpdate();
+    }
 
 
 
@@ -83,7 +91,6 @@ class PersonTable extends React.Component {
     parseAddresses(object) {
         var result = "";
         for(var i=0; i<Object.keys(object).length;i++){
-            console.log(object[i]);
             // result+= "Addresse "+(i+1)+": ";
             for(var j=0;j<addressKeys.length;j++) {
 
@@ -114,8 +121,12 @@ class PersonTable extends React.Component {
                 for(var j=0;j<subscribableKeys.length;j++) {
                     var val = this.state.personData[i][subscribableKeys[j]];
 
-                    if(subscribableKeys[j] == "address"){
+                    if(subscribableKeys[j] === "address"){
                         val = this.parseAddresses(this.state.personData[i][subscribableKeys[j]]);
+                    }
+
+                    if(subscribableKeys[j] === "dob"){
+                        val = parseSQLDateToSimpleDate(val);
                     }
 
 
@@ -143,7 +154,7 @@ class PersonTable extends React.Component {
             <h1>JSON Response</h1>
 
             <br />
-            <AddPersonForm api={api} keys={this.getPersonKeys()}/>
+            <AddPersonForm api={api} keys={this.getPersonKeys()} addresskeys={addressKeys} reloadParent={this.reloadComponent}/>
             <table className="personTable centered">
             <tr>
             {this.displayPersonKeys()}
