@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.ramineqbal</groupId>
 	<artifactId>personbackend</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.9-beta</version>
 	<name>personbackend</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -53,7 +53,20 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<show>private</show>
+					<nohelp>true</nohelp>
+				</configuration>
+      		</plugin>
+
 		</plugins>
+		
 	</build>
 
 </project>

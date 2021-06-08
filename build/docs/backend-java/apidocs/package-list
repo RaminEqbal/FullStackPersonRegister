@@ -1,0 +1,6 @@
+com.ramineqbal.personbackend
+com.ramineqbal.personbackend.api
+com.ramineqbal.personbackend.exception
+com.ramineqbal.personbackend.model
+com.ramineqbal.personbackend.repository
+com.ramineqbal.personbackend.service
