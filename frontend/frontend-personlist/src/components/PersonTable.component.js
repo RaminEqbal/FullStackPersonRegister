@@ -4,32 +4,11 @@ import "../css/tabledata.css"
 import AddPersonForm from './AddPersonForm.components';
 
 
+import globals from "../globals"
+
+
+
 import {parseSQLDateToSimpleDate} from '../parser/DateParser'
-
-
-
-
-const api = "http://localhost:8080/api/person";
-
-const subscribableKeys = [
-    // "id",
-    "surname",
-    "name",
-    "emailAddress",
-    "dob",
-    "address",
-]
-
-
-
-
-const addressKeys = [
-    // "id",
-    "streetName",
-    "streetNo",
-    "postalCode",
-    "countryName"
-]
 
 
 
@@ -45,7 +24,7 @@ class PersonTable extends React.Component {
 
     fetchPersonData() {
 
-        fetch(api)
+        fetch(globals.api)
         .then(response => response.json())
         .then(data => {
             this.setState({
@@ -66,18 +45,18 @@ class PersonTable extends React.Component {
 
 
     getPersonKeys() {
-        if(subscribableKeys == null) return null;
+        if(globals.subscribableKeys == null) return null;
         else {
-            return subscribableKeys;
+            return globals.subscribableKeys;
         }
     }
 
 
 
     displayPersonKeys() {
-        if(subscribableKeys == null) return null;
+        if(globals.subscribableKeys == null) return null;
         else {
-            return subscribableKeys.map(item => <th>{item}</th>)
+            return globals.subscribableKeys.map(item => <th>{item}</th>)
         }
     }
 
@@ -92,10 +71,10 @@ class PersonTable extends React.Component {
         var result = "";
         for(var i=0; i<Object.keys(object).length;i++){
             // result+= "Addresse "+(i+1)+": ";
-            for(var j=0;j<addressKeys.length;j++) {
+            for(var j=0;j<globals.addressKeys.length;j++) {
 
-                result += object[i][addressKeys[j]];
-                if(j != addressKeys.length-1) result += ", "
+                result += object[i][globals.addressKeys[j]];
+                if(j !== globals.addressKeys.length-1) result += ", "
             }
             result+=";"
         }
@@ -118,14 +97,14 @@ class PersonTable extends React.Component {
             for(var i=0;i<Object.keys(this.state.personData).length;i++ ){
             
                 var person = []
-                for(var j=0;j<subscribableKeys.length;j++) {
-                    var val = this.state.personData[i][subscribableKeys[j]];
+                for(var j=0;j<globals.subscribableKeys.length;j++) {
+                    var val = this.state.personData[i][globals.subscribableKeys[j]];
 
-                    if(subscribableKeys[j] === "address"){
-                        val = this.parseAddresses(this.state.personData[i][subscribableKeys[j]]);
+                    if(globals.subscribableKeys[j] === "address"){
+                        val = this.parseAddresses(this.state.personData[i][globals.subscribableKeys[j]]);
                     }
 
-                    if(subscribableKeys[j] === "dob"){
+                    if(globals.subscribableKeys[j] === "dob"){
                         val = parseSQLDateToSimpleDate(val);
                     }
 
@@ -154,7 +133,7 @@ class PersonTable extends React.Component {
             <h1>JSON Response</h1>
 
             <br />
-            <AddPersonForm api={api} keys={this.getPersonKeys()} addresskeys={addressKeys} reloadParent={this.reloadComponent}/>
+            <AddPersonForm reloadParent={this.reloadComponent}/>
             <table className="personTable centered">
             <tr>
             {this.displayPersonKeys()}

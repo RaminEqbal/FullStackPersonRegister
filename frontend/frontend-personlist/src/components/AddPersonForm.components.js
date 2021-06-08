@@ -1,6 +1,6 @@
 import React from 'react';
 
-
+import globals from "../globals"
 
 
 import {parseSimpleDateToSQLDate} from '../parser/DateParser'
@@ -23,7 +23,7 @@ class AddPersonForm extends React.Component {
     renderForm() {
 
 
-        var result = this.props.keys.map(item => {
+        var result = globals.subscribableKeys.map(item => {
             return (
             
             <div>
@@ -63,12 +63,12 @@ class AddPersonForm extends React.Component {
 
         try {
 
-        for(var i=0;i<this.props.keys.length;i++)
+        for(var i=0;i<globals.subscribableKeys.length;i++)
         {
             
             
             //Address Case
-            if(this.props.keys[i] === "address"){
+            if(globals.subscribableKeys[i] === "address"){
                 var addressValues = []
                 const entries = this.state["address"].split(";");
                 
@@ -81,21 +81,21 @@ class AddPersonForm extends React.Component {
                     
                     for(var k=0;k<values.length;k++){
                         
-                        addressObject[this.props.addresskeys[k]] = values[k];
+                        addressObject[globals.addressKeys[k]] = values[k];
                     }
                     
                     console.log(addressObject);
                     addressValues.push(addressObject);
                 }
                 
-                dataBody[this.props.keys[i]] = addressValues;
+                dataBody[globals.subscribableKeys[i]] = addressValues;
 
             }
-            else if(this.props.keys[i] === "dob"){
-                dataBody[this.props.keys[i]] = parseSimpleDateToSQLDate( this.state[this.props.keys[i]]);
+            else if(globals.subscribableKeys[i] === "dob"){
+                dataBody[globals.subscribableKeys[i]] = parseSimpleDateToSQLDate( this.state[globals.subscribableKeys[i]]);
             }
             else {
-                dataBody[this.props.keys[i]] = this.state[this.props.keys[i]];
+                dataBody[globals.subscribableKeys[i]] = this.state[globals.subscribableKeys[i]];
             }
 
 
@@ -117,14 +117,17 @@ class AddPersonForm extends React.Component {
 
 
         try {
-            const response = await fetch(this.props.api+"/add", {
+            await fetch(globals.api+"/add", {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: jsonData
-            }).then(res => console.log(res))
+            }).then(res =>{
+                if(!res.ok) throw new Error("Failed to add Person. Code:"+res.status);
+                return res;
+            })
 
 
             alert("Person has been added");
