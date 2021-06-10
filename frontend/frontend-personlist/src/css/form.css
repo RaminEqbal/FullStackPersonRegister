@@ -1,0 +1,20 @@
+.addPersonForm>div {
+    display:grid;
+    grid-gap: 16px;
+    grid-template-columns: 200px 1fr;
+    padding-bottom: 2vh;
+}
+
+
+
+
+
+.addPersonForm label {
+    grid-column: 1/2;
+
+}
+
+.addPersonForm input, button {
+    grid-column: 2/3;
+
+}

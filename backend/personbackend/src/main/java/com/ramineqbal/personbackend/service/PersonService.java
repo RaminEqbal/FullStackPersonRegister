@@ -3,11 +3,14 @@ package com.ramineqbal.personbackend.service;
 import java.util.List;
 
 import com.ramineqbal.personbackend.exception.AddressNotFoundException;
+import com.ramineqbal.personbackend.exception.EmailNotValidException;
+import com.ramineqbal.personbackend.exception.IllegalAddressException;
 import com.ramineqbal.personbackend.exception.PersonNotFoundException;
 import com.ramineqbal.personbackend.model.Address;
 import com.ramineqbal.personbackend.model.Person;
 import com.ramineqbal.personbackend.repository.AddressRepository;
 import com.ramineqbal.personbackend.repository.PersonRepository;
+import com.ramineqbal.personbackend.validators.EmailValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +56,12 @@ public class PersonService {
     @Transactional
     public Person addPerson(Person person){
         Person mutatedPerson = person;
+
+        //Check E-Mail Validity
+        if(!EmailValidator.isValidEmail(person.getEmailAddress())) throw new EmailNotValidException("The E-Mail provided for the Object is not valid");
+
+
+
         List<Address> addressList = mutatedPerson.getAddress();
 
 
@@ -60,6 +69,12 @@ public class PersonService {
         //Iterate through the Address List of the Person Object
         for(int i =0;i<addressList.size();i++){
             
+
+            //First Check if Address is valid
+            if(!addressList.get(i).isValid()) throw new IllegalAddressException("The provided address does not contain all required data");
+
+
+
             //Creates Example-Address Instance of an Address within the Person Object 
             Example<Address> addressLookup = Example.of(addressList.get(i));
 

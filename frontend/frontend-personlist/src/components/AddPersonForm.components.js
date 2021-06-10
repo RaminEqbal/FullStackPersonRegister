@@ -1,14 +1,23 @@
 import React from 'react';
 
-import globals from "../globals"
+import globals, { localeStrings, namespace } from "../globals"
 
 
 import {parseSimpleDateToSQLDate} from '../parser/DateParser'
+import { isValidSimpleDate } from '../validators/DateValidator';
+import { isValidEmail } from '../validators/EmailValidator';
 
 
 
+const setLocale = localeStrings.german;
 
 
+/**
+ * The Form for adding a new person.
+ * Depends on globals for the definition of the used API keys 
+ * @property reloadParent: Gets the reload function of its Parent passed (in general PersonTable.component) so it can reload it after
+ * a POST request has been made
+ */
 class AddPersonForm extends React.Component {
 
     constructor(props) {
@@ -20,6 +29,13 @@ class AddPersonForm extends React.Component {
       }
 
 
+
+
+    /**
+     * 
+     * Definiton of the Form
+     * @returns The complexe JSX for the form
+     */
     renderForm() {
 
 
@@ -27,15 +43,15 @@ class AddPersonForm extends React.Component {
             return (
             
             <div>
-                <label>{item}</label>
-                <input type="text" name={item} onChange={this.handleInputChange} />
+                <label>{setLocale.keys[item]}</label>
+                <input type="text" placeholder={setLocale.placeholders[item]} name={item} onChange={this.handleInputChange} />
             </div>)
         })
 
 
         return (
             <div>
-            <form onSubmit={this.handleSubmit}>
+            <form className="addPersonForm" onSubmit={this.handleSubmit}>
                 {result}
                 <input type="submit" value="Submit" />
             </form>
@@ -43,7 +59,11 @@ class AddPersonForm extends React.Component {
         );
     }
 
-
+    /**
+     * General purpose method for React Controlled Forms
+     * Passes Value Changes into the Component State Model
+     * @param {*} event 
+     */
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -54,12 +74,17 @@ class AddPersonForm extends React.Component {
         });
       }
     
-      async handleSubmit(event) {
-        event.preventDefault();
-        console.log("Submit Triggered")
+
+
+    /**
+     * Prepares a JSON Object according to API specification based on the values inside the form fields
+     * Manual Parse and Validate Cases are deployed here, which can throw Errors
+     * One-dimensionally extendable by expanding subscribableKeys in globals.js
+     * @returns JSON Object according to API based on form values
+     */
+    prepareJSON() {
+
         var dataBody = {};
-
-
 
         try {
 
@@ -68,9 +93,9 @@ class AddPersonForm extends React.Component {
             
             
             //Address Case
-            if(globals.subscribableKeys[i] === "address"){
+            if(globals.subscribableKeys[i] === namespace.keys.ADDRESS){
                 var addressValues = []
-                const entries = this.state["address"].split(";");
+                const entries = this.state[namespace.keys.ADDRESS].split(";");
                 
                 //Loop through entries
                 for(var j=0;j<entries.length;j++){
@@ -91,48 +116,76 @@ class AddPersonForm extends React.Component {
                 dataBody[globals.subscribableKeys[i]] = addressValues;
 
             }
-            else if(globals.subscribableKeys[i] === "dob"){
-                dataBody[globals.subscribableKeys[i]] = parseSimpleDateToSQLDate( this.state[globals.subscribableKeys[i]]);
+            else if(globals.subscribableKeys[i] === namespace.keys.DATE_OF_BIRTH){
+                //Validate Date
+                if(isValidSimpleDate(this.state[globals.subscribableKeys[i]])){
+                    dataBody[globals.subscribableKeys[i]] = parseSimpleDateToSQLDate( this.state[globals.subscribableKeys[i]]);
+                }
+                else {
+                    throw new Error(setLocale.errorMessages.PARSE_DATE_ERROR)
+                }
+                
+            }
+            else if(globals.subscribableKeys[i] === namespace.keys.EMAIL){
+
+                //Validate Email
+                if(isValidEmail(this.state[globals.subscribableKeys[i]])){
+                    dataBody[globals.subscribableKeys[i]] = this.state[globals.subscribableKeys[i]]
+                }
+                else {
+                    throw new Error(setLocale.errorMessages.PARSE_EMAIL_ERROR)
+                }
             }
             else {
+                //Default Case. Just add the input value to the corresponding JSON Key
                 dataBody[globals.subscribableKeys[i]] = this.state[globals.subscribableKeys[i]];
             }
-
-
-
-
         }
-
-        console.log(dataBody);
-
-
         }
         catch(error){
-            alert("Faulty Form");
+            alert(setLocale.errorMessages.PARSE_FORM_ERROR+ error);
             return;
         }
         
 
-        const jsonData = JSON.stringify(dataBody);
+        return JSON.stringify(dataBody);
+
+
+    }
+
+
+
+
+    /**
+     * Method containing the actions when pressing the Submit Button on the form
+     * Triggers a POST Request to the API to add an object
+     * Notifies the user if the API accepted the object as a valid entry
+     */
+    async handleSubmit(event) {
+        event.preventDefault();
+
+
+        const jsonData = this.prepareJSON();        
 
 
         try {
-            await fetch(globals.api+"/add", {
+            await fetch(namespace.api.add, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: jsonData
-            }).then(res =>{
-                if(!res.ok) throw new Error("Failed to add Person. Code:"+res.status);
+            }).then(async res => {
+                let response = await res.json();
+                if(!res.ok) throw new Error(setLocale.errorMessages.PERSON_NOT_ADD+response.message);
                 return res;
             })
 
 
-            alert("Person has been added");
+            alert(setLocale.messages.PERSON_ADD);
         } catch(error) {
-            alert("There was a problem adding the data with the API\n"+ error);
+            alert(setLocale.errorMessages.API_RETURNS_NOT_OK+ error);
             return;
         }
         
@@ -153,8 +206,8 @@ class AddPersonForm extends React.Component {
     render() {
 
         return (
-            <div>
-            <h2>Form</h2>
+            <div className="centered pretty-border pretty-border-soothing">
+            <h2>{setLocale.html.FORM_ADDPERSON_TITLE}</h2>
 
             {this.renderForm()}
 

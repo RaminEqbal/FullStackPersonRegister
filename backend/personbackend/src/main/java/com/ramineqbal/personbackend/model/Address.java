@@ -96,6 +96,16 @@ public class Address implements Serializable {
     }
 
 
+    public boolean isValid() {
+        if(this.streetName == null || this.countryName == null || this.postalCode == 0){
+            return false;
+        }
+        return true;
+    }
+
+
+
+
     /**
      * Getters and setters
      */
@@ -146,6 +156,10 @@ public class Address implements Serializable {
     }
 
     
+
+
+
+
 
 
 }

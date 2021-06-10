@@ -1,0 +1,19 @@
+.centered {
+    width: 80%;
+    margin: auto;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.pretty-border {
+    font-size: 1.6rem;
+	display: grid;
+	min-height: 200px;
+	border: 8px solid;
+	padding: 1rem;
+}
+
+.pretty-border-soothing {
+
+    border-image: linear-gradient(45deg, rgb(134, 52, 52), rgb(96, 142, 185)) 1;
+}

@@ -1,9 +1,0 @@
-Bitte erstelle eine Webanwendung, die eine Liste von Personen mit Adressen der Personen ausgibt. Dabei sollen mindestens bei einer Person mehrere Adressen dargestellt werden.
-Die Webanwendung soll aus einem Frontend mit einer der Technologien Angular, React oder Vue.Js und einem Backend (REST-Service) mit Spring Boot bestehen. Die Daten sollen in einer relationalen Datenbank vorliegen.
-Bitte präsentiere die Lösung der Aufgabe inklusive Sourcecode. Du kannst deinen eigenen Laptop mitbringen. Alternativ stellen wir dir einen Laptop mit Windows 10 und OpenJDK 12 sowie Apache Maven 3.6.3. Bedenke in diesem Fall die Verwendung einer embedded Datenbank wie z.B. H2.
-
-
-
-Backend: Spring Boot Restful Service
-Database: H2, SQLITE
-Frontend: React.js, Table Layout, maybe Search?
