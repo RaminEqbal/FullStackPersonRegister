@@ -88,6 +88,7 @@ class AddPersonForm extends React.Component {
 
         try {
 
+        //Iterate through all specified keys
         for(var i=0;i<globals.subscribableKeys.length;i++)
         {
             
@@ -193,7 +194,6 @@ class AddPersonForm extends React.Component {
         
         
 
-        console.log(this.props.reloadParent);
         this.props.reloadParent();
 
 
